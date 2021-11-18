@@ -1,0 +1,7 @@
+Week 3 Lab
+
+7. A1.sql
+SELECT country.Name, countrylanguage.Language
+FROM country INNER JOIN countrylanguage
+ON country.Code = countrylanguage.CountryCode
+WHERE countrylanguage.isOfficial = "T";

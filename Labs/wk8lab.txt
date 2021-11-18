@@ -1,0 +1,52 @@
+Week 8 Lab
+
+1.
+SELECT state, COUNT(id) AS nTickets
+FROM ParkingTicket
+GROUP BY state
+ORDER BY nTickets DESC;
+
+2.
+?
+
+3.
+SELECT (SUBSTR(day,7,4) || '-' || SUBSTR(day,1,2) || '-' || SUBSTR(day,4,2)) AS date, COUNT(id) AS n_tickets
+FROM ParkingTicket
+GROUP BY date
+ORDER BY n_tickets DESC;
+
+4.
+SELECT carColour, COUNT(id) AS n_tickets
+FROM ParkingTicket
+GROUP BY carColour
+HAVING n_tickets >= 5000;
+
+5.
+SELECT state, COUNT(*) as n_white_tickets
+FROM ParkingTicket
+WHERE carColour LIKE "WH%"
+GROUP BY state;
+
+6.
+SELECT state
+
+FROM (SELECT state, COUNT(*) as n_white_tickets
+FROM ParkingTicket
+WHERE carColour LIKE "WH%"
+GROUP BY state) t1
+
+INNER JOIN 
+
+(SELECT state, COUNT(*) as n_black_tickets
+FROM ParkingTicket
+WHERE carColour == "BK"
+OR carColour == "BLK"
+OR carColour == "BLACK"
+GROUP BY state) t2
+
+ON t1.state = t2.state
+
+WHERE t2.n_black_tickets > t1.n_white_tickets;
+
+7.
+-

@@ -1,0 +1,141 @@
+# Week 7 Lab
+
+1.
+SELECT tournYear, winnerName, loserName
+FROM MatchResult
+WHERE loserName == "Roger Federer"
+OR loserName == "Novak Djokovic"
+OR loserName == "Andy Murray"
+OR loserName == "Rafael Nadal";
+
+2.
+SELECT winnerName, COUNT(*) AS nWins
+FROM (SELECT tournYear, winnerName, loserName
+FROM MatchResult
+WHERE loserName == "Roger Federer"
+OR loserName == "Novak Djokovic"
+OR loserName == "Andy Murray"
+OR loserName == "Rafael Nadal")
+GROUP BY winnerName
+ORDER BY nWins DESC;
+
+3.
+SELECT loserName, COUNT(*) as nLosses
+FROM (SELECT tournYear, winnerName, loserName
+FROM MatchResult
+WHERE winnerName == "Roger Federer"
+OR winnerName == "Novak Djokovic"
+OR winnerName == "Andy Murray"
+OR winnerName == "Rafael Nadal")
+GROUP BY loserName
+ORDER BY nLosses DESC;
+
+4.
+SELECT winnerCountry, COUNT(*) AS nWins
+FROM MatchResult
+GROUP BY winnerCountry
+ORDER BY nWins DESC;
+
+5.
+SELECT DISTINCT customerNumber
+FROM payments;
+
+6.
+SELECT MIN(amount) AS min, MAX(amount) AS max, AVG(amount) AS avg
+FROM payments;
+
+7.
+SELECT customerNumber, COUNT(*) AS totalPayments, ROUND(SUM(amount),2) AS totalSpend
+FROM payments
+GROUP BY customerNumber
+ORDER BY totalSpend DESC;
+
+8.
+SELECT  customers.customerName, COUNT(*) AS totalPayments, ROUND(SUM(payments.amount),2) AS totalSpend
+FROM payments INNER JOIN customers
+ON payments.customerNumber = customers.customerNumber
+GROUP BY customers.customerNumber
+ORDER BY totalSpend DESC;
+
+9. (Correct if needed for submission)
+SELECT DISTINCT customers.customerName, payments.amount
+FROM customers INNER JOIN payments
+ON customers.customerNumber = payments.customerNumber
+WHERE amount > (SELECT AVG(amount) FROM payments)
+ORDER BY payments.amount ASC;
+
+10.
+SELECT DISTINCT customerName
+FROM customers
+WHERE customerNumber NOT IN (SELECT DISTINCT customerNumber from payments);
+
+11.
+SELECT orderNumber
+FROM orderdetails
+GROUP BY orderNumber
+HAVING COUNT(productCode) == 1
+
+12.
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+WHERE products.productLine == "Planes";
+
+13.
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails JOIN products USING (productCode)
+WHERE productLine = "Planes"
+INTERSECT
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails JOIN products USING (productCode)
+WHERE productLine = "Trains";
+
+14.
+SELECT orderNumber
+FROM orders
+WHERE orderNumber NOT IN
+(SELECT DISTINCT orderNumber
+FROM orderdetails, products
+WHERE orderdetails.productCode = products.productCode
+AND productLine = 'Planes');
+
+15.
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails
+WHERE orderdetails.orderNumber NOT IN
+(SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails JOIN products USING (productCode)
+WHERE orderdetails.productCode = products.productCode
+AND products.productLine = 'Planes');
+
+16.
+--all order numbers which have planes
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+WHERE products.productLine = "Planes"
+
+INTERSECT
+--all order numbers with one item
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+GROUP BY orderdetails.orderNumber
+HAVING COUNT(*) = 1;
+
+--all order numbers which have planes
+/*SELECT DISTINCT orderNumber
+FROM orderdetails o1 INNER JOIN products p1
+ON o1.productCode = p1.productCode
+WHERE p1.productLine = 'Planes' AND o1.orderNumber IN (
+--all order numbers with one item
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+GROUP BY orderdetails.orderNumber
+HAVING COUNT(*) = 1);*/
+
+
+
+
+

@@ -1,0 +1,74 @@
+Week 9 lab
+
+1.
+SELECT category, COUNT(*) AS n_crewmembers
+FROM crewmembers
+GROUP BY category;
+
+2. A1.sql
+SELECT category, COUNT(DISTINCT person_id) AS n_crewmembers
+FROM crewmembers
+GROUP BY category;
+
+3. A2.sql
+SELECT *
+FROM people
+WHERE person_id IN
+(SELECT p1.person_id
+FROM people p1 INNER JOIN people p2
+ON p1.name = p2.name
+WHERE p1.person_id != p2.person_id);
+
+4.
+SELECT COUNT(DISTINCT person_id) AS n_living_people
+FROM people
+WHERE died IS NULL;
+
+5. A3.sql
+SELECT COUNT(died) AS n_died, (COUNT(*) - COUNT(died)) AS n_living
+FROM people;
+
+6.
+SELECT title FROM
+(SELECT t.title, COUNT(c.person_id) AS crew_count
+FROM crewmembers c INNER JOIN titles t
+ON c.title_id = t.title_id
+GROUP BY c.title_id
+HAVING crew_count == 6
+ORDER BY crew_count DESC);
+
+7.
+?
+
+8. A4.sql
+SELECT t.title, COUNT(DISTINCT c.person_id) AS n_crew
+FROM titles t LEFT OUTER JOIN crewmembers c
+ON t.title_id = c.title_id
+GROUP BY t.title_id;
+
+9. A5.sql
+SELECT title
+
+FROM titles t
+
+WHERE t.title_id IN
+
+(SELECT DISTINCT t1.title_id 
+
+FROM
+
+(SELECT c.title_id, COUNT(*) AS n_crew_total
+FROM people p INNER JOIN castmembers c
+ON p.person_id = c.person_id
+GROUP BY c.title_id) t1
+
+INNER JOIN
+
+(SELECT c.title_id, (COUNT(*) - COUNT(died)) AS n_crew_alive
+FROM people p INNER JOIN castmembers c
+ON p.person_id = c.person_id
+GROUP BY c.title_id) t2
+
+ON t1.title_id = t2.title_id
+
+WHERE t1.n_crew_total == t2.n_crew_alive);

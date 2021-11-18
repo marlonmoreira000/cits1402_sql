@@ -1,0 +1,60 @@
+Week 5 Lab
+
+1.
+SELECT COUNT(orderNumber)
+FROM orders;
+
+2.
+SELECT officeCode, city
+FROM offices;
+
+3.
+SELECT employees.lastName
+FROM offices INNER JOIN employees
+ON offices.officeCode = employees.officeCode
+WHERE offices.city = "Sydney";
+
+4.
+SELECT COUNT(DISTINCT customerNumber)
+FROM orders;
+
+5.
+SELECT SUM(quantityOrdered * priceEach) AS totalOrderPrice
+FROM orderdetails
+WHERE orderNumber = 10122;
+
+6.
+SELECT DISTINCT orderdetails.orderNumber
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+WHERE products.productLine = "Planes";
+
+7.
+SELECT 
+products.productName, 
+orderdetails.quantityOrdered, 
+(orderdetails.quantityOrdered * orderdetails.priceEach) AS orderPrice
+FROM products INNER JOIN orderdetails
+ON products.productCode = orderdetails.productCode
+WHERE orderdetails.orderNumber = 10122;
+
+8.
+SELECT DISTINCT firstName, lastName
+FROM employees
+WHERE reportsTo = 1102;
+
+9.
+SELECT DISTINCT firstName, lastName
+FROM employees
+WHERE reportsTo IS NULL;
+
+10.
+SELECT DISTINCT orderNumber
+FROM 
+--Table 1
+(orderdetails AS O1 INNER JOIN products AS P1 ON O1.productCode = P1.productCode)
+INNER JOIN
+--Table 2
+(orderdetails AS O2 INNER JOIN products AS P2 ON O2.productCode = P2.productCode)
+ON O1.orderNumber = O2.orderNumber
+WHERE P1.productLine = "Planes" AND P2.productLine = "Ships";

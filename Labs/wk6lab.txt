@@ -1,0 +1,107 @@
+Week 6 Lab
+
+1.
+SELECT Playlist.PlaylistId AS playlistId, COUNT(PlaylistTrack.TrackId) AS trackCount
+FROM Playlist INNER JOIN PlaylistTrack
+ON Playlist.PlaylistId = PlaylistTrack.PlaylistId
+GROUP BY Playlist.PlaylistId;
+
+2.
+SELECT Playlist.Name AS playlistName, COUNT(PlaylistTrack.TrackId) AS trackCount
+FROM Playlist INNER JOIN PlaylistTrack
+ON Playlist.PlaylistId = PlaylistTrack.PlaylistId
+GROUP BY Playlist.PlaylistId;
+
+3.
+SELECT offices.city, COUNT(employees.employeeNumber) AS numEmployees
+FROM offices INNER JOIN employees
+ON offices.officeCode = employees.officeCode
+GROUP BY offices.city;
+
+4.
+SELECT tournYear, MAX(minutes) AS lengthLonest
+FROM MatchResult
+GROUP BY tournYear;
+
+5.
+SELECT productLine, MAX(buyPrice) AS maxProductPrice
+FROM products
+GROUP BY productLine;
+
+6. A1.sql
+SELECT orderNumber, COUNT(orderLineNumber) AS numLineItems, SUM(quantityOrdered * priceEach) AS totalCost
+FROM orderdetails
+GROUP BY ordernumber
+ORDER BY totalCost DESC;
+
+7.
+SELECT tournYear, COUNT(*) AS djokovicWins
+FROM MatchResult
+WHERE winnerName = "Novak Djokovic"
+GROUP BY tournYear;
+
+8.
+SELECT tournYear, winnerName, COUNT(*) AS winCount
+FROM MatchResult
+GROUP BY tournYear, winnerName
+HAVING winCount >= 5;
+
+9.
+SELECT tournYear, ROUND(COUNT(winnerName) / COUNT(*), 2) AS pctYoungWins
+FROM MatchResult
+GROUP BY tournYear;
+
+10. A2.sql
+SELECT winnerName, COUNT(*) AS winCount, ROUND(AVG(minutes), 2) AS avgWinMins
+FROM MatchResult
+GROUP BY winnerName
+HAVING winCount >= 10
+ORDER BY avgWinMins ASC;
+
+11.
+SELECT productLine, COUNT(DISTINCT productCode) AS numTypes, SUM(quantityInStock) AS numStock
+FROM products
+GROUP BY productLine;
+
+12.
+SELECT orderdetails.orderNumber AS ordernumber, products.productLine AS productLine, COUNT(quantityOrdered) AS numLineItems, 
+ROUND(SUM(orderdetails.quantityOrdered * orderdetails.priceEach) , 2) AS totalPrice
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+GROUP BY orderdetails.orderNumber, products.productLine;
+
+13.
+SELECT orderdetails.orderNumber, ROUND(SUM((orderdetails.priceEach - products.buyPrice) * orderdetails.quantityOrdered), 2) AS netProfit
+FROM orderdetails INNER JOIN products
+ON orderdetails.productCode = products.productCode
+GROUP BY orderdetails.orderNumber;
+
+14. A3.sql
+SELECT customers.customerName AS customerName, SUM(orderdetails.quantityOrdered * orderdetails.priceEach) AS totalSpend
+FROM orderdetails
+INNER JOIN orders ON orderdetails.orderNumber = orders.orderNumber
+INNER JOIN customers ON orders.customerNumber = customers.customerNumber
+GROUP BY customers.customerName
+HAVING totalSpend >= 500000;
+
+15.
+SELECT year, round, 
+(CASE WHEN (homeScore >= awayScore) THEN homeScore
+ELSE awayScore
+END) AS winScore
+FROM AFLResult;
+
+16.
+SELECT year,
+ROUND(AVG(CASE WHEN (homeScore >= awayScore) THEN homeScore ELSE awayScore END), 2) AS avgWinScore
+FROM AFLResult
+GROUP BY year;
+
+17.
+SELECT DISTINCT homeTeam AS team,
+year,
+ROUND(AVG(CASE WHEN (homeScore > awayScore) THEN homeScore
+WHEN (homeScore < awayScore) THEN awayScore
+ELSE "DRAW" END), 2) AS avgWinScore
+FROM AFLResult
+GROUP BY team, year;

@@ -1,0 +1,63 @@
+Week 4 Lab
+
+1.
+SELECT *
+FROM people
+WHERE person_id = "nm0675356";
+
+2.
+SELECT *
+FROM castmembers
+WHERE title_id = "tt0172495";
+
+3. A2.sql
+SELECT people.name, castmembers.characters
+FROM castmembers INNER JOIN people
+ON castmembers.person_id = people.person_id
+WHERE castmembers.title_id = "tt0172495";
+
+4.
+SELECT titles.title, ratings.rating
+FROM titles INNER JOIN ratings
+ON titles.title_id = ratings.title_id
+WHERE ratings.rating > 8.5;
+
+5. 
+SELECT titles.title, ratings.rating, ratings.votes
+FROM titles INNER JOIN ratings
+ON titles.title_id = ratings.title_id
+WHERE ratings.votes > 1000000
+ORDER BY ratings.votes DESC;
+
+6. A3.sql
+SELECT titles.title, people.name
+FROM crewmembers
+INNER JOIN titles ON crewmembers.title_id = titles.title_id
+INNER JOIN people ON crewmembers.person_id = people.person_id
+WHERE crewmembers.category = "director";
+
+7.
+SELECT COUNT(*)
+FROM castmembers
+WHERE title_id = "tt0167260";
+
+8.
+SELECT MIN(runtime_minutes) AS shortest,
+MAX(runtime_minutes) AS longest,
+AVG(runtime_minutes) AS average
+FROM titles;
+
+9.
+SELECT 
+title,
+((runtime_minutes - (runtime_minutes%60)) / 60) AS hours,
+(runtime_minutes%60) AS minutes
+FROM titles;
+
+10. A4.sql
+SELECT titles.title, people.name
+FROM castmembers
+INNER JOIN people ON castmembers.person_id = people.person_id
+INNER JOIN titles ON castmembers.title_id = titles.title_id
+INNER JOIN ratings ON castmembers.title_id = ratings.title_id
+WHERE ratings.rating >= 9;
